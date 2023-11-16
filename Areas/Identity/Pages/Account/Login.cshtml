@@ -1,0 +1,85 @@
+﻿@page
+@model LoginModel
+
+@{
+	ViewData["Title"] = "Iniciar Sessão";
+}
+
+<div class="container mt-6">
+	<div class="row">
+
+		<div class="d-flex justify-content-center text-uppercase">
+			<h2>@ViewData["Title"]</h2>
+		</div>
+	</div>
+	<div class="row justify-content-center mt-3">
+		<div class="col-md-4">
+			<section>
+				<form id="account" method="post">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<div class="form-group">
+						<label asp-for="Input.Email" class="form-label"></label>
+						<input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+						<span asp-validation-for="Input.Email" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="Input.Password" class="form-label"></label>
+						<input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+						<span asp-validation-for="Input.Password" class="text-danger"></span>
+					</div>
+					<div>
+						<div class="checkbox">
+							<label asp-for="Input.RememberMe" class="form-label">
+								<input class="form-check-input" asp-for="Input.RememberMe" />
+								@Html.DisplayNameFor(m => m.Input.RememberMe)
+							</label>
+						</div>
+					</div>
+					<div>
+						<button id="login-submit" type="submit" class="btn btn-lg btn-primary mb-2">Entrar</button>
+					</div>
+					<div>
+						<p>
+							<a id="forgot-password" asp-page="./ForgotPassword">Esqueceste-te da tua palavra-passe?</a>
+						</p>
+						<p>
+							<a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registar como novo utilizador</a>
+						</p>
+						<p>
+							<a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Reenviar a confirmação por correio eletrónico</a>
+						</p>
+					</div>
+				</form>
+
+				<div>
+					@{
+						if ((Model.ExternalLogins?.Count ?? 0) == 0) {
+							<div>
+							</div>
+						} else {
+							<hr />
+							<div class="d-flex flex-column align-items-center">
+							<p>
+								Ou inicia a tua conta de forma rápida e fácil
+							</p>
+							<form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+								<div>
+									<p>
+										@foreach (var provider in Model.ExternalLogins!) {
+											<button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><img src="~/images/google-icon.png" class="d-inline me-1" width="20" height="20"> @provider.DisplayName</button>
+										}
+									</p>
+								</div>
+							</form>
+							</div>
+						}
+					}
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
